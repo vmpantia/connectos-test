@@ -12,12 +12,12 @@ namespace ACME.Infrastructure.Database.Contexts
         private readonly List<Country> _countries = new List<Country>();
         private readonly List<Magazine> _magazines = new List<Magazine>();
         private readonly List<Publication> _publications = new List<Publication>();
-        public ACMEDbContext(DbContextOptions options) : base(options)
+        public ACMEDbContext(DbContextOptions<ACMEDbContext> options) : base(options)
         {
             _customers = MockData.MockCustomer().Generate(20);
             _countries = MockData.MockCountry().Generate(10);
             _magazines = MockData.MockMagazine().Generate(100);
-            _addresses = MockData.MockAddress(_customers.Select(data => data.Id), 
+            _addresses = MockData.MockAddress(_customers.Select(data => data.Id),
                                               _countries.Select(data => data.Id))
                                  .Generate(20);
             _publications = MockData.MockPublication(_countries.Select(data => data.Id))
@@ -27,13 +27,13 @@ namespace ACME.Infrastructure.Database.Contexts
                 var customerAddresses = _addresses.Where(data => data.CustomerId == customer.Id)
                                                   .ToList();
 
-                if (customerAddresses.Any())
+                foreach(var customerAddress in customerAddresses)
                 {
-                    var subscriptions = MockData.MockSubscription(customer.Id, 
-                                                                  customerAddresses.Select(data => data.Id),
-                                                                  _magazines.Select(data => data.Id))
-                                                .Generate(20);
-                    _subscriptions.AddRange(subscriptions);
+                    var subscription = MockData.MockSubscription(customer.Id,
+                                                                 customerAddress.Id,
+                                                                 _magazines.Select(data => data.Id))
+                                               .Generate();
+                    _subscriptions.Add(subscription);
                 }
             }
         }
@@ -86,6 +86,7 @@ namespace ACME.Infrastructure.Database.Contexts
                 subs.HasOne(prop => prop.Customer)
                      .WithMany(prop => prop.Subscriptions)
                      .HasForeignKey(prop => prop.CustomerId)
+                     .OnDelete(DeleteBehavior.Restrict)
                      .IsRequired();
 
                 subs.HasOne(prop => prop.Address)
@@ -97,7 +98,7 @@ namespace ACME.Infrastructure.Database.Contexts
                     .HasForeignKey(prop => prop.MagazineId)
                     .IsRequired();
 
-                subs.HasData(_magazines);
+                subs.HasData(_subscriptions);
             });
 
             modelBuilder.Entity<Country>(cntry =>

@@ -49,11 +49,11 @@ namespace ACME.Domain.Data.Stubs
                 .RuleFor(prop => prop.CreatedAtUtcNow, opt => opt.Date.PastOffset())
                 .RuleFor(prop => prop.CreatedBy, opt => opt.Internet.Email());
 
-        public static Faker<Subscription> MockSubscription(Guid customerId, IEnumerable<Guid> customerAddressIds, IEnumerable<Guid> magazineIds) =>
+        public static Faker<Subscription> MockSubscription(Guid customerId, Guid customerAddressId, IEnumerable<Guid> magazineIds) =>
             new Faker<Subscription>()
                 .RuleFor(prop => prop.Id, opt => opt.Random.Guid())
                 .RuleFor(prop => prop.CustomerId, customerId)
-                .RuleFor(prop => prop.AddressId, opt => opt.PickRandom(customerAddressIds))
+                .RuleFor(prop => prop.AddressId, customerAddressId)
                 .RuleFor(prop => prop.MagazineId, opt => opt.PickRandom(magazineIds))
                 .RuleFor(prop => prop.Status, opt => opt.PickRandom<Status>())
                 .RuleFor(prop => prop.CreatedAtUtcNow, opt => opt.Date.PastOffset())

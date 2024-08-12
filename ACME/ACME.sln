@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACME.Infrastructure", "ACME.Infrastructure\ACME.Infrastructure.csproj", "{B542D76A-5F62-4EAD-BB71-3291E2F08C57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACME.Infrastructure", "ACME.Infrastructure\ACME.Infrastructure.csproj", "{B542D76A-5F62-4EAD-BB71-3291E2F08C57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACME.Domain", "ACME.Domain\ACME.Domain.csproj", "{499196F7-41A5-48AB-975C-8283300C551A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACME.Domain", "ACME.Domain\ACME.Domain.csproj", "{499196F7-41A5-48AB-975C-8283300C551A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACME.Api", "ACME.Api\ACME.Api.csproj", "{7DC1EA41-5B3A-4CAB-BED6-7B356444A057}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{499196F7-41A5-48AB-975C-8283300C551A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{499196F7-41A5-48AB-975C-8283300C551A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{499196F7-41A5-48AB-975C-8283300C551A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DC1EA41-5B3A-4CAB-BED6-7B356444A057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DC1EA41-5B3A-4CAB-BED6-7B356444A057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DC1EA41-5B3A-4CAB-BED6-7B356444A057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DC1EA41-5B3A-4CAB-BED6-7B356444A057}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
