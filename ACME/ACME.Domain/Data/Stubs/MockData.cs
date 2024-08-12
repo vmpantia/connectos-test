@@ -67,5 +67,17 @@ namespace ACME.Domain.Data.Stubs
                 .RuleFor(prop => prop.Status, opt => opt.PickRandom<Status>())
                 .RuleFor(prop => prop.CreatedAtUtcNow, opt => opt.Date.PastOffset())
                 .RuleFor(prop => prop.CreatedBy, opt => opt.Internet.Email());
+
+        public static Faker<PrintDistributor> MockPrintDistributor(Guid publicationId) =>
+            new Faker<PrintDistributor>()
+                .RuleFor(prop => prop.Id, opt => opt.Random.Guid())
+                .RuleFor(prop => prop.PublicationId, publicationId)
+                .RuleFor(prop => prop.Name, opt => opt.Company.CompanyName())
+                .RuleFor(prop => prop.Description, opt => opt.Company.CompanySuffix())
+                .RuleFor(prop => prop.APIEndPoint, opt => opt.Internet.Url())
+                .RuleFor(prop => prop.APIKey, opt => opt.Random.Guid().ToString())
+                .RuleFor(prop => prop.Status, opt => opt.PickRandom<Status>())
+                .RuleFor(prop => prop.CreatedAtUtcNow, opt => opt.Date.PastOffset())
+                .RuleFor(prop => prop.CreatedBy, opt => opt.Internet.Email());
     }
 }

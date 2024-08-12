@@ -10,21 +10,23 @@ namespace ACME.Infrastructure.Database.Repositories
     {
         public CustomerRepository(ACMEDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<Customer>> GetCustomersFullInformation(CancellationToken token)
+        public async Task<IEnumerable<Customer>> GetCustomersFullInformationAsync(CancellationToken token)
         {
             var customers = await GetAll()
                                     .Include(tbl => tbl.Addresses)
                                     .Include(tbl => tbl.Subscriptions)
+                                    .AsSplitQuery()
                                     .ToListAsync(token);
 
             return customers;
         }
 
-        public async Task<IEnumerable<Customer>> GetCustomersFullInformation(Expression<Func<Customer, bool>> expression, CancellationToken token)
+        public async Task<IEnumerable<Customer>> GetCustomersFullInformationAsync(Expression<Func<Customer, bool>> expression, CancellationToken token)
         {
             var customers = await GetByExpression(expression)
                                     .Include(tbl => tbl.Addresses)
                                     .Include(tbl => tbl.Subscriptions)
+                                    .AsSplitQuery()
                                     .ToListAsync(token);
 
             return customers;

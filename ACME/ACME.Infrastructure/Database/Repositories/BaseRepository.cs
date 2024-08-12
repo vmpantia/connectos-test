@@ -23,6 +23,12 @@ namespace ACME.Infrastructure.Database.Repositories
         public async Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> expression, CancellationToken token) =>
             await _table.FirstAsync(expression, token);
 
+        public bool IsExist(Expression<Func<TEntity, bool>> expression, out TEntity entity)
+        {
+            entity = _table.FirstOrDefault(expression);
+            return entity is not null;
+        }
+
         public async Task<IEntity> CreateAsync(TEntity entity, CancellationToken token)
         {
             await _table.AddAsync(entity, token);

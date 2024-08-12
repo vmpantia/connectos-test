@@ -4,14 +4,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ACME.Domain.Models.Entities
 {
-    public class Publication : IEntity
+    public class PrintDistributor : IEntity
     {
         [Key]
         public required Guid Id { get; set; }
 
+        public required Guid PublicationId { get; set; }
         public required string Name { get; set; }
         public string? Description { get; set; }
-        public required Guid CountryId { get; set; }
+        public required string APIEndPoint { get; set; }
+        public required string APIKey { get; set; }
 
         public required Status Status { get; set; }
         public required DateTimeOffset CreatedAtUtcNow { get; set; }
@@ -21,7 +23,6 @@ namespace ACME.Domain.Models.Entities
         public DateTimeOffset? DeletedAtUtcNow { get; set; }
         public string? DeletedBy { get; set; }
 
-        public virtual Country Country { get; set; }
-        public virtual PrintDistributor PrintDistributor { get; set; }
+        public virtual Publication Publication { get; set; }
     }
 }

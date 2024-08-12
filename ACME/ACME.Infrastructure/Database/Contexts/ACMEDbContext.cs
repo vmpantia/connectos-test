@@ -1,5 +1,6 @@
 ﻿using ACME.Domain.Data.Stubs;
 using ACME.Domain.Models.Entities;
+using ACME.Domain.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace ACME.Infrastructure.Database.Contexts
@@ -12,22 +13,25 @@ namespace ACME.Infrastructure.Database.Contexts
         private readonly List<Country> _countries = new List<Country>();
         private readonly List<Magazine> _magazines = new List<Magazine>();
         private readonly List<Publication> _publications = new List<Publication>();
+        private readonly List<PrintDistributor> _printDistributors = new List<PrintDistributor>();
         public ACMEDbContext(DbContextOptions<ACMEDbContext> options) : base(options)
         {
-            _customers = MockData.MockCustomer().Generate(20);
-            _countries = MockData.MockCountry().Generate(10);
-            _magazines = MockData.MockMagazine().Generate(100);
+            _customers = MockData.MockCustomer().Generate(50);
+            _countries = MockData.MockCountry().Generate(20);
+            _magazines = MockData.MockMagazine().Generate(300);
             _addresses = MockData.MockAddress(_customers.Select(data => data.Id),
                                               _countries.Select(data => data.Id))
-                                 .Generate(20);
+                                 .Generate(60);
             _publications = MockData.MockPublication(_countries.Select(data => data.Id))
-                                    .Generate(5);
+                                    .Generate(20);
+
+            // Generate subscriptions mock data
             foreach (var customer in _customers)
             {
                 var customerAddresses = _addresses.Where(data => data.CustomerId == customer.Id)
                                                   .ToList();
 
-                foreach(var customerAddress in customerAddresses)
+                foreach (var customerAddress in customerAddresses)
                 {
                     var subscription = MockData.MockSubscription(customer.Id,
                                                                  customerAddress.Id,
@@ -35,6 +39,13 @@ namespace ACME.Infrastructure.Database.Contexts
                                                .Generate();
                     _subscriptions.Add(subscription);
                 }
+            }
+
+            // Generate print distributors mock data
+            foreach (var publication in _publications)
+            {
+                var distributor = MockData.MockPrintDistributor(publication.Id).Generate();
+                _printDistributors.Add(distributor);
             }
         }
 
@@ -60,6 +71,8 @@ namespace ACME.Infrastructure.Database.Contexts
                      .IsRequired();
 
                 cstmr.HasData(_customers);
+
+                cstmr.HasQueryFilter(data => data.Status != Status.Deleted);
             });
 
             modelBuilder.Entity<Address>(addrs =>
@@ -79,6 +92,8 @@ namespace ACME.Infrastructure.Database.Contexts
                      .IsRequired();
 
                 addrs.HasData(_addresses);
+
+                addrs.HasQueryFilter(data => data.Status != Status.Deleted);
             });
 
             modelBuilder.Entity<Subscription>(subs =>
@@ -99,6 +114,8 @@ namespace ACME.Infrastructure.Database.Contexts
                     .IsRequired();
 
                 subs.HasData(_subscriptions);
+
+                subs.HasQueryFilter(data => data.Status != Status.Deleted);
             });
 
             modelBuilder.Entity<Country>(cntry =>
@@ -114,6 +131,8 @@ namespace ACME.Infrastructure.Database.Contexts
                      .IsRequired();
 
                 cntry.HasData(_countries);
+
+                cntry.HasQueryFilter(data => data.Status != Status.Deleted);
             });
 
             modelBuilder.Entity<Magazine>(mgzn =>
@@ -124,16 +143,35 @@ namespace ACME.Infrastructure.Database.Contexts
                     .IsRequired();
 
                 mgzn.HasData(_magazines);
+
+                mgzn.HasQueryFilter(data => data.Status != Status.Deleted);
             });
 
-            modelBuilder.Entity<Publication>(mgzn =>
+            modelBuilder.Entity<Publication>(pblc =>
             {
-                mgzn.HasOne(prop => prop.Country)
+                pblc.HasOne(prop => prop.Country)
                     .WithMany(prop => prop.Publications)
                     .HasForeignKey(prop => prop.CountryId)
                     .IsRequired();
 
-                mgzn.HasData(_publications);
+                pblc.HasOne(prop => prop.PrintDistributor)
+                    .WithOne(prop => prop.Publication)
+                    .IsRequired();
+
+                pblc.HasData(_publications);
+
+                pblc.HasQueryFilter(data => data.Status != Status.Deleted);
+            });
+
+            modelBuilder.Entity<PrintDistributor>(prnt =>
+            {
+                prnt.HasOne(prop => prop.Publication)
+                    .WithOne(prop => prop.PrintDistributor)
+                    .IsRequired();
+
+                prnt.HasData(_printDistributors);
+
+                prnt.HasQueryFilter(data => data.Status != Status.Deleted);
             });
         }
     }

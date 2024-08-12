@@ -18,6 +18,8 @@ namespace ACME.Infrastructure.Extensions
 
         private static IServiceCollection AddRepositories(this IServiceCollection services) =>
             services.AddScoped<ICustomerRepository, CustomerRepository>()
-                    .AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+                    .AddScoped<ISubscriptionRepository, SubscriptionRepository>()
+                    .AddScoped<IPublicationRepository, PublicationRepository>()
+                    .AddScoped<IPrintDistributorRepository, PrintDistributorRepository>();
     }
 }
