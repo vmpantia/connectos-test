@@ -19,7 +19,7 @@ namespace ACME.Api.Controllers
         public async Task<IActionResult> GetPublicationByIdAsync(Guid publicationId) =>
             await HandleRequestAsync(new GetPublicationByIdQuery(publicationId));
 
-        [HttpGet("PrintDistributors/{printDistributorId}")]
+        [HttpGet("print-distributors/{printDistributorId}")]
         public async Task<IActionResult> GetPublicationsByPrintDistributorIdAsync(Guid printDistributorId) =>
             await HandleRequestAsync(new GetPublicationsByPrintDistributorIdQuery(printDistributorId));
     }
